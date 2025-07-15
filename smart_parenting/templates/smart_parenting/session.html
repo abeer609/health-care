@@ -1,0 +1,67 @@
+{% extends 'smart_parenting/base.html' %}
+
+{% block title %} Sessions {%endblock %}
+
+{% block extra_head %} {% endblock %}
+
+{% block page_header %} Sessions {% endblock %}
+
+{% block content %}
+    <ul role="list" class="grid grid-cols-1 gap-x-6 gap-y-8 lg:grid-cols-3 xl:gap-x-8">
+    {% for session in sessions %}
+        <li class="overflow-hidden rounded-xl border border-gray-200">
+            <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-4">
+                <div class="text-sm/6 font-medium text-gray-900">{{session.title}}</div>
+            </div>
+            <dl class="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm/6">
+                <div class="flex justify-between gap-x-4 py-3">
+                    <dt class="text-gray-500">Date</dt>
+                    <dd class="text-gray-700"><time datetime="{{session.date}}">{{session.date}}</time></dd>
+                </div>
+                <div class="flex justify-between gap-x-4 py-3">
+                    <dt class="text-gray-500">Time</dt>
+                    <dd class="text-gray-700"><time datetime="{{session.time}}">{{session.time | date:"h:i A"}}</time></dd>
+                </div>
+                <div class="flex justify-between gap-x-4 py-3">
+                    <dt class="text-gray-500">Doctor</dt>
+                    <dd class="text-gray-700">{{session.appointment.doctor}}</dd>
+                </div>
+                <div class="flex justify-between gap-x-4 py-3">
+                    <dt class="text-gray-500">Duration</dt>
+                    <dd class="text-gray-700">{{session.appointment.doctor.duration}} minutes</dd>
+                </div>
+                <div class="flex justify-between gap-x-4 py-3">
+                    <dt class="text-gray-500">Status</dt>
+                    <dd class="text-gray-700">
+                        {% if session.is_active %}
+                            <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">Active</span>
+                            {% else %}
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-700">Expired</span>
+                        {% endif %}
+                    </dd>
+                </div>
+                <div class="flex justify-between gap-x-4 py-3">
+                    <dt class="text-gray-500">Session Link</dt>
+                    <dd class="text-gray-700"><a href="{{session.session_link}}">{{session.session_link}}</a></dd>
+                </div>
+                <div class="flex items-center justify-end ">
+                    <a target="_blank"  class="mt-2 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200" href="{{session.session_link}}">Join Session</a>
+                </div>
+                <!-- <div class="flex justify-between gap-x-4 py-3">
+                    <dt class="text-gray-500">Amount</dt>
+                    <dd class="flex items-start gap-x-2">
+                        <div class="font-medium text-gray-900">$7,600.00</div>
+                        <div class="rounded-md py-1 px-2 text-xs font-medium ring-1 ring-inset text-green-700 bg-green-50 ring-green-600/20">Paid</div>
+                    </dd>
+                </div> -->
+            </dl>
+        </li>
+    {% endfor %}
+    
+  </ul>
+
+{% endblock %}
+
+{% block script %}
+ 
+{% endblock %}

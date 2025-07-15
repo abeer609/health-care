@@ -1,0 +1,191 @@
+{% extends 'base.html' %} {% block content %}
+<!-- Block start -->
+<!-- <section class="bg-gray-50 dark:bg-gray-900">
+  <div
+    class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+  >
+    <div
+      class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+    >
+      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <h1
+          class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+        >
+          Sign in to your account
+        </h1>
+        {% for message in messages %}
+        <p class="my-1 text-red-500">{{message}}</p>
+        {% endfor %}
+        <form method="post" class="space-y-4 md:space-y-6">
+          {% csrf_token %}
+          <div>
+            <label
+              for="email"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >{{form.username.label}}</label
+            >
+            {{form.username}}
+          </div>
+          <div>
+            <label
+              for="password"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >{{form.password.label}}</label
+            >
+            {{form.password}}
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-start">
+              <div class="flex items-center h-5">
+                <input
+                  id="remember"
+                  aria-describedby="remember"
+                  type="checkbox"
+                  class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <label for="remember" class="text-gray-500 dark:text-gray-300"
+                  >Remember me</label
+                >
+              </div>
+            </div>
+            <a
+              href="#"
+              class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+              >Forgot password?</a
+            >
+          </div>
+          <button
+            type="submit"
+            class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+          >
+            Sign in
+          </button>
+          <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+            Don’t have an account yet?
+            <a
+              href="{% url 'register' %}"
+              class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+              >Sign up</a
+            >
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+Block end -->
+
+<div class="flex min-h-[800px] flex-col bg-gray-50">
+  <!--
+  This example requires updating your template:
+
+  ```
+  <html class="h-full bg-gray-50">
+  <body class="h-full">
+  ```
+  -->
+  <div
+    class="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8"
+  >
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+      <h2
+        class="mt-6 text-center text-2xl/9 font-bold tracking-tight text-gray-900"
+      >
+        Sign in to your account
+      </h2>
+    </div>
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
+      <div class="bg-white px-6 py-12 shadow-sm sm:rounded-lg sm:px-12">
+        {% for message in messages %}
+        <p class="mb-6 text-red-500">{{message}}</p>
+        {% endfor %}
+        <form class="space-y-6" method="POST">
+          {% csrf_token %}
+          <div>
+            <label for="email" class="block text-sm/6 font-medium text-gray-900"
+              >Username</label
+            >
+            <div class="mt-2">{{form.username}}</div>
+          </div>
+
+          <div>
+            <label
+              for="password"
+              class="block text-sm/6 font-medium text-gray-900"
+              >Password</label
+            >
+            <div class="mt-2">
+             {{form.password}}
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex gap-3">
+              <div class="flex h-6 shrink-0 items-center">
+                <div class="group grid size-4 grid-cols-1">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                  />
+                  <svg
+                    class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                  >
+                    <path
+                      class="opacity-0 group-has-checked:opacity-100"
+                      d="M3 8L6 11L11 3.5"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                    <path
+                      class="opacity-0 group-has-indeterminate:opacity-100"
+                      d="M3 7H11"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <label for="remember-me" class="block text-sm/6 text-gray-900"
+                >Remember me</label
+              >
+            </div>
+
+            <div class="text-sm/6">
+              <a
+                href="#"
+                class="font-semibold text-indigo-600 hover:text-indigo-500"
+                >Forgot password?</a
+              >
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Sign in
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <p class="mt-10 text-center text-sm/6 text-gray-500">
+        Not a member?
+        <!-- space -->
+        <a href="{% url 'register' %}" class="font-semibold text-indigo-600 hover:text-indigo-500"
+          >Sign up</a
+        >
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

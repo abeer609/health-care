@@ -1,0 +1,102 @@
+{% extends 'smart_parenting/base.html' %}
+
+{% block title %} Counseling with doctor {%endblock %}
+
+{% block extra_head %} {% endblock %}
+
+{% block page_header %} Appointment {% endblock %}
+
+{% block content %}
+    <form class="space-y-4 md:space-y-6" method="post">
+          {% csrf_token %} {% for field in form %}
+          <div>
+            <label
+              for="email"
+              class="required block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+              >{{field.label}} {%if field.field.required%}<span class="text-red-500">*</span>{%endif%}</label
+            >
+            {{field}} {% for error in field.errors %}
+            <p class="mt-1 text-red-500">{{error}}</p>
+            {% endfor %}
+          </div>
+          {% endfor %}
+
+          <button
+            id="submit_form"
+            type="submit"
+            class="flex  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Book Now
+          </button>
+          
+        </form>
+{% endblock %}
+
+{% block script %}
+    <script>
+      const timeField = document.getElementById("id_time");
+      const doctorField = document.getElementById("id_doctor");
+      const dateField = document.getElementById("id_date");
+
+      const timeChoice = new Choices(timeField, {
+        choices: [],
+        searchEnabled: false,
+        shouldSort: false,
+        noChoicesText: "You must have to choose doctor and date first",
+      });
+
+      let choices;
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+      let data = {
+        doctor_id: null,
+        date: null,
+      };
+      async function fetchTimeSlot(data) {
+        const csrftoken = getCookie("csrftoken");
+        const request = await fetch("/available/", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "X-CSRFToken": csrftoken,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        });
+        const { slots } = await request.json();
+        return slots;
+      }
+     
+      doctorField.addEventListener("change", async (e) => {
+        data = { ...data, doctor_id: e.target.value };
+        if (data.doctor_id && data.date) {
+          const timeSlots = await fetchTimeSlot(data);
+          timeChoice.clearChoices(true, true);
+          timeChoice.setChoices(timeSlots);
+        }
+      });
+      dateField.addEventListener("change", async (e) => {
+        data = { ...data, date: e.target.value };
+        if (data.doctor_id && data.date) {
+          const timeSlots = await fetchTimeSlot(data);
+          timeChoice.clearChoices(true, true);
+          timeChoice.setChoices(timeSlots);
+        }
+      });
+    </script>
+{% endblock %}

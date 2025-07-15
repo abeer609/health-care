@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Doctors</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fdfdfd;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #333;
+    }
+    /* Navbar with gradient */
+    .navbar {
+      background: linear-gradient(90deg, #e74c3c, #8e44ad, #3498db);
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .navbar ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+    .navbar ul li {
+      margin: 0 15px;
+    }
+    .navbar ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    .navbar ul li a:hover {
+      color: #f8c471;
+    }
+
+    /* Container for doctors */
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+    h2 {
+      color: #3498db;
+      margin-bottom: 20px;
+    }
+    .doctor-card {
+      display: flex;
+      justify-content: space-between;
+      background: #f9f9f9;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+    }
+    .doctor-card:hover {
+      transform: scale(1.05);
+    }
+    .doctor-info {
+      font-size: 18px;
+      color: #333;
+    }
+    .doctor-actions {
+      display: flex;
+      align-items: center;
+    }
+    .doctor-actions button, .doctor-actions a {
+      background-color: #3498db;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 0 10px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    .doctor-actions button:hover, .doctor-actions a:hover {
+      background-color: #2980b9;
+    }
+    /* Call and email buttons hover effect */
+    .doctor-actions button:active, .doctor-actions a:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <span>Available Doctors</span>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="parentcare.html">Parent Care</a></li>
+      <li><a href="childcare.html">Child Care</a></li>
+      <li><a href="#">Logout</a></li>
+    </ul>
+  </div>
+
+  
+  <div class="container">
+    <h2>Meet Our Doctors</h2>
+
+   
+    <div class="doctor-card">
+      <div class="doctor-info">
+        <h3>Dr. Rafi</h3>
+        <p>Specialization: Pediatrician</p>
+        <p>Available: Monday to Friday, 9 AM - 5 PM</p>
+      </div>
+      <div class="doctor-actions">
+        <button onclick="window.location.href='tel:+1234567890'">Call</button>
+        <a href="mailto:alice.johnson@example.com">Email</a>
+      </div>
+    </div>
+
+    
+    <div class="doctor-card">
+      <div class="doctor-info">
+        <h3>Dr. Rafi</h3>
+        <p>Specialization: Pediatrician</p>
+        <p>Available: Monday to Friday, 9 AM - 4 PM</p>
+      </div>
+      <div class="doctor-actions">
+        <button onclick="window.location.href='tel:+0987654321'">Call</button>
+        <a href="mailto:mark.smith@example.com">Email</a>
+      </div>
+    </div>
+
+    
+    <div class="doctor-card">
+      <div class="doctor-info">
+        <h3>Dr. Rafi</h3>
+        <p>Specialization: Pediatrician</p>
+        <p>Available: Tuesday to Saturday, 10 AM - 6 PM</p>
+      </div>
+      <div class="doctor-actions">
+        <button onclick="window.location.href='tel:+1122334455'">Call</button>
+        <a href="mailto:sarah.williams@example.com">Email</a>
+      </div>
+    </div>
+
+   
+    <div class="doctor-card">
+      <div class="doctor-info">
+        <h3>Dr. Rafi</h3>
+        <p>Specialization: Pediatrician</p>
+        <p>Available: Monday to Friday, 8 AM - 4 PM</p>
+      </div>
+      <div class="doctor-actions">
+        <button onclick="window.location.href='tel:+5566778899'">Call</button>
+        <a href="mailto:john.doe@example.com">Email</a>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

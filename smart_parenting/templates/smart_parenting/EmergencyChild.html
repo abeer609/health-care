@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            /* text-align: center; */
+        }
+        .navbar {
+            background: #1565C0;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .navbar ul li {
+            margin: 0 15px;
+        }
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+        .navbar ul li a:hover {
+            color: #FFD700;
+        }
+        .container {
+            width: 60%;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            color: #1565C0;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #1976D2;
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0D47A1;
+        }
+        .location-btn {
+            background: #d32f2f;
+        }
+        .location-btn:hover {
+            background: #b71c1c;
+        }
+        .help-section {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .help-box {
+            background: #ff9800;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .help-box:hover {
+            transform: scale(1.05);
+        }
+        .amblink{
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+        <h2 class="text-2xl font-bold mb-4">Emergency Form</h2>
+        <form>
+            <input type="text" placeholder="Your Name" required>
+            <input type="text" placeholder="Your Address" required>
+            <input type="tel" placeholder="Your Phone Number" required>
+            <textarea rows="4" placeholder="Describe your emergency" required></textarea>
+            <input type="file" accept="image/*,video/*">
+            <button type="button" class="location-btn" onclick="getLocation()">Share Live Location</button>
+            <button type="submit">Submit</button>
+        </form>
+
+        <div class="help-section">
+            <div class="help-box" onclick="callHelpline()">📞 Call Helpline</div>
+            <a href="ambulance.html" class="amblink"><div class="help-box">🚑 Nearby Ambulance Numbers</div></a>
+        </div>
+    </div>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    alert("Live Location Shared: \nLatitude: " + position.coords.latitude + 
+                          "\nLongitude: " + position.coords.longitude);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function callHelpline() {
+            window.location.href = "tel:112"; // Replace with actual emergency number
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block extrahead %}
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            text-align: center;
+        }
+        .navbar {
+            background: #1565C0;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        .navbar ul li {
+            margin: 0 15px;
+        }
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+        .navbar ul li a:hover {
+            color: #FFD700;
+        }
+        .container {
+            width: 80%;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            color: #1565C0;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #1976D2;
+            color: white;
+        }
+        .call-btn {
+            background: #D32F2F;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+        .call-btn:hover {
+            background: #B71C1C;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+        <h2>Nearby Ambulance Services</h2>
+        <table>
+            <tr>
+                <th>Ambulance Name</th>
+                <th>Location</th>
+                <th>Phone Number</th>
+                <th>Call</th>
+            </tr>
+            <tr>
+                <td>City Hospital Ambulance</td>
+                <td>Downtown</td>
+                <td>+880123456789</td>
+                <td><button class="call-btn" onclick="callAmbulance('+880123456789')">Call</button></td>
+            </tr>
+            <tr>
+                <td>Rapid Response Ambulance</td>
+                <td>Uptown</td>
+                <td>+880987654321</td>
+                <td><button class="call-btn" onclick="callAmbulance('+880987654321')">Call</button></td>
+            </tr>
+            <tr>
+                <td>Emergency Care Ambulance</td>
+                <td>East Side</td>
+                <td>+880112233445</td>
+                <td><button class="call-btn" onclick="callAmbulance('+880112233445')">Call</button></td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        function callAmbulance(phoneNumber) {
+            window.location.href = `tel:${phoneNumber}`;
+        }
+    </script>
+{% endblock %}
+
+
+    
+
+</body>
+</html>
