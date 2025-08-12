@@ -3,6 +3,8 @@ from django.db import models
 from user.models import User
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class WeekendsChoice(models.IntegerChoices):
@@ -93,8 +95,9 @@ class Appointment(models.Model):
 
 class TeachingAid(models.Model):
     title = models.CharField(max_length=300)
-    youtube_iframe = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     video_url = models.URLField(blank=True, null=True)
+    youtube_url = models.URLField(blank=True, null=True)
     video = models.FileField(
         upload_to="teaching-aids",
         validators=[FileExtensionValidator(allowed_extensions=["mp4", "mkv", "mov"])],
@@ -104,8 +107,16 @@ class TeachingAid(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 
-from django.db.models.signals import post_save, pre_delete, pre_save
-from django.dispatch import receiver
+class Emergency(models.Model):
+    full_name = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    address = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=14)
+    details = models.TextField()
+    live_location = models.JSONField(null=True, blank=True)
+    file = models.FileField(upload_to='emergencies', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 
 @receiver(post_save, sender=Session)
@@ -114,3 +125,41 @@ def update_appointment_status(sender, instance, created, **kwargs):
         appointment = instance.appointment
         appointment.status = "approved"
         appointment.save()
+
+class AutismScreeningQuestion(models.Model):
+    YES_NO_CHOICES = [
+            (True, "Yes"),
+            (False, "No"),
+        ]
+    
+    class ChildrenAgeRange(models.TextChoices):
+        INFANTS = "INFANTS", "Infants (6-12 months)"
+        TODDLERS = "TODDLERS", "Toddlers (12-24 months)"
+        PRESCHOOLERS = "PRESCHOOLERS", "Preschoolers (2-5 years)"
+        CHILDREN = "CHILDREN", "Children (6-12 years)"
+
+    class QuestionType(models.TextChoices):
+        LOW = "LOW", "Low"
+        MEDIUM = "MEDIUM", "Medium"
+        HIGH = "HIGH", "High"
+
+    title = models.TextField()
+    age = models.CharField(max_length=20, choices=ChildrenAgeRange, default=ChildrenAgeRange.INFANTS)
+    expected_answer = models.BooleanField(choices=YES_NO_CHOICES, default=True)
+    question_importance = models.CharField(max_length=10, choices=QuestionType, default=QuestionType.LOW)
+    # is_low_weight = models.BooleanField(default=False)
+
+class Response(models.Model):
+    YES_NO_CHOICES = [
+        (True, "Yes"),
+        (False, "No"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="responses")
+    question = models.ForeignKey(AutismScreeningQuestion, on_delete=models.CASCADE, related_name="responses")
+    answer = models.BooleanField(choices=YES_NO_CHOICES)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "question")  # Prevents duplicate answers
+

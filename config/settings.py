@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-ao#+#8zxr9$-n%_8^s!7dt%ln8^uwq=g$qxe2&eigdr31s#$qe
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -155,3 +155,7 @@ DOCTOR_WEEKENDS = [5, 6]
 # TIME_INPUT_FORMATS = ("%I:%M %p",)
 # TIME_INPUT_FORMATS = ["%I:%M %p", "%H:%M:%S", "%I:%M:%S %p"]
 # USE_L10N = True
+
+CSRF_TRUSTED_ORIGINS = [
+        'https://c80b0376b936.ngrok-free.app'
+    ]

@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.contrib import admin
 from django.db import models
-from .models import Appointment, Doctor, Session, TeachingAid
+from .models import Appointment, Doctor, Response, Session, TeachingAid, Emergency, AutismScreeningQuestion
 from unfold.admin import ModelAdmin as UnfoldModelAdmin
 from unfold.widgets import UnfoldAdminFileFieldWidget
 from django.utils.safestring import mark_safe
@@ -52,6 +52,8 @@ class AppointmentAdmin(UnfoldModelAdmin):
         "user",
         "action",
     ]
+    search_fields = ['patient_name']
+    list_filter = ['status']
     autocomplete_fields = ["doctor", "user"]
     form = AppointmentAdminForm
 
@@ -100,3 +102,17 @@ class TeachingAidAdmin(UnfoldModelAdmin):
 
 
 # print(UnfoldAdminField(DoctorForm, "email", is_first=False))
+
+@admin.register(Emergency)
+class EmergencyAdmin(UnfoldModelAdmin):
+    list_display = ['full_name']
+
+@admin.register(AutismScreeningQuestion)
+class AutismScreeningQuestionAdmin(UnfoldModelAdmin):
+    list_display = ['title', 'age', 'expected_answer']
+    list_editable = ['age', 'expected_answer']
+    list_filter = ['age']
+
+@admin.register(Response)
+class AutismScreeningQuestionAdmin(UnfoldModelAdmin):
+    list_display = ['user__username', 'answer']

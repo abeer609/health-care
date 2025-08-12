@@ -1,0 +1,180 @@
+{% extends 'smart_parenting/base.html' %} {%block content %}
+
+{% block extra_head %}
+<link href="https://vjs.zencdn.net/5.4.6/video-js.css" rel="stylesheet" />
+<link href="https://unpkg.com/@videojs/themes@1/dist/fantasy/index.css" rel="stylesheet">
+<script defer src="https://vjs.zencdn.net/5.4.6/video.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.0/Youtube.min.js"></script>
+<style>
+    [class*="-dimensions"] {
+        width: 100%;
+        height: auto;
+    }
+</style>
+{% endblock %}
+
+<div class="relative" x-data="{ open: false }" @keydown.window.escape="open = false">
+    <div x-show="open" class="relative z-50 lg:hidden"
+        x-description="Off-canvas menu for mobile, show/hide based on off-canvas menu state." x-ref="dialog"
+        aria-modal="true">
+
+        <!-- backdrop -->
+        <div x-show="open" x-transition:enter="transition-opacity ease-linear duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" class="fixed inset-0 bg-gray-900/80"
+            x-description="Off-canvas menu backdrop, show/hide based on off-canvas menu state." aria-hidden="true">
+        </div>
+
+
+        <!-- mobile menu -->
+        <div class="fixed inset-0 flex">
+            <div x-show="open" x-transition:enter="transition ease-in-out duration-300 transform"
+                x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+                x-transition:leave="transition ease-in-out duration-300 transform"
+                x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
+                x-description="Off-canvas menu, show/hide based on off-canvas menu state."
+                class="relative mr-16 flex w-full max-w-xs flex-1" @click.away="open = false">
+
+                <div x-show="open" x-transition:enter="ease-in-out duration-300" x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100" x-transition:leave="ease-in-out duration-300"
+                    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                    x-description="Close button, show/hide based on off-canvas menu state."
+                    class="absolute top-0 left-full flex w-16 justify-center pt-5">
+                    <button type="button" class="-m-2.5 p-2.5" @click="open = false">
+                        <span class="sr-only">Close sidebar</span>
+                        <svg class="size-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" aria-hidden="true" data-slot="icon">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Sidebar component, swap this element with another sidebar if you like -->
+                <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2">
+                    <div class="flex h-16 shrink-0 items-center">
+                       <h1 class="text-lg font-semibold">Teaching aids</h1>
+                    </div>
+                    <nav class="flex flex-1 flex-col">
+                        <ul role="list" class="-mx-2 space-y-1">
+                            {% for aid in teaching_aids %}
+                            <li>
+                                <a href="{% url 'smart_parenting:teaching_aid' aid.id %}"
+                                    class="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm/6"
+                                    x-state-description="undefined: &quot;bg-gray-50 text-indigo-600&quot;, undefined: &quot;text-gray-700 hover:text-indigo-600 hover:bg-gray-50&quot;">
+                                    <svg class="size-6 shrink-0 text-gray-400 group-hover:text-indigo-600" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                        stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                                    </svg>
+                                    {{aid.title}}
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                            
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- desktop menu -->
+    <div class="lg:absolute border rounded-md h-96 border-slate-300 overflow-y-auto hidden top-0 left-0 lg:flex lg:w-80 lg:flex-col">
+        <!-- Sidebar component, swap this element with another sidebar if you like -->
+        <div class="flex grow flex-col gap-y-5 overflow-y-auto border-gray-200 bg-white px-6">
+            <nav class="flex flex-1 flex-col">
+                <h3 class="my-6 font-semibold">Teaching aids</h3>
+                <ul role="list" class="-mx-2 space-y-1">
+                    {% for aid in teaching_aids %}
+                    <li>
+                        {% if aid.pk == active_url%}
+                        <a href="{% url 'smart_parenting:teaching_aid' aid.id %}"
+                            class="text-indigo-600 hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm/6 ">
+                            <svg class="size-6 shrink-0 text-gray-400 group-hover:text-indigo-600" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                            </svg>
+                            {{aid.title}}
+                        </a>
+                        {% else %}
+                        <a href="{% url 'smart_parenting:teaching_aid' aid.id %}"
+                            class="text-gray-700  hover:text-indigo-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm/6 ">
+                            <svg class="size-6 shrink-0 text-gray-400 group-hover:text-indigo-600" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                            </svg>
+                            {{aid.title}}
+                        </a>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- menu button -->
+    <div class="sticky top-0 right-0 pl-3 max-h-full lg:hidden">
+        <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="open = true">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                aria-hidden="true" data-slot="icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5">
+                </path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- main -->
+    <main class="lg:ml-80 min-h-96">
+        <div class="px-4 sm:px-4 lg:px-6">
+            <div class="w-full">
+                {% if teaching_aid.youtube_url %}
+                    <video
+                        id="vid1"
+                        controls
+                        class="!w-full !h-full video-js vjs-theme-fantasy aspect-video"
+                        data-setup='{ "techOrder": ["youtube"], "sources": [{ "type": "video/youtube", "src": "{{teaching_aid.youtube_url}}"}]}'
+                        >
+                    </video>
+                    {% elif teaching_aid.video %}
+                    <video id="my-video" class="video-js vjs-theme-fantasy w-full aspect-video" controls height="auto"
+                        width="auto" preload="auto" data-setup="{}">
+                        <source src="http://127.0.0.1:8000{{teaching_aid.video.url}}" type="video/mp4" />
+                    </video>
+                {% endif %}
+
+                
+            </div>
+
+           
+            <div class="pt-6">
+                <div class="mb-4 ">
+                    <h1 class="text-lg font-semibold">{{teaching_aid.title}}</h1>
+                    <p class="text-sm text-slate-500">{{teaching_aid.uploaded_at}}</p>
+                </div>
+                {% if teaching_aid.description %}
+                    <p>{{teaching_aid.description}}</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </main>
+</div>
+{% endblock %}
+
+
+{% block script %}
+
+<script>
+
+</script>
+{% endblock %}

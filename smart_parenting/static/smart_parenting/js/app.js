@@ -500,3 +500,9 @@ function useTrackedPointer() {
     },
   };
 }
+
+
+const hideMessage = ()=>{
+  const msg = document.getElementById("message")
+  msg.hidden = true
+}

@@ -1,0 +1,26 @@
+{
+  "name": "health-care",
+  "version": "1.0.0",
+  "description": "``` pip install -r requirements.txt ```",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abeer609/health-care.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abeer609/health-care/issues"
+  },
+  "homepage": "https://github.com/abeer609/health-care#readme",
+  "devDependencies": {
+    "tailwindcss": "^4.1.11"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.11"
+  }
+}

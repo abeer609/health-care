@@ -1,17 +1,21 @@
 {% extends 'smart_parenting/base.html' %}
-
 {% block title %} Counseling with doctor {%endblock %}
-
 {% block extra_head %} {% endblock %}
-
 {% block page_header %} Appointment {% endblock %}
 
 {% block content %}
-    <form class="space-y-4 md:space-y-6" method="post">
+    <header>
+      <div class="mx-auto max-w-7xl">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+          Appointment
+        </h1>
+      </div>
+    </header>
+    <form class="space-y-4 md:space-y-6 mt-10" method="post">
           {% csrf_token %} {% for field in form %}
           <div>
             <label
-              for="email"
+              for="{{field.auto_id}}"
               class="required block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
               >{{field.label}} {%if field.field.required%}<span class="text-red-500">*</span>{%endif%}</label
             >

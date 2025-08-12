@@ -1,9 +1,17 @@
 import json
-from django.http import JsonResponse
+from django.db import IntegrityError
+from django.http import JsonResponse, HttpResponseRedirect
+from django.contrib import messages
 from django.shortcuts import render
 import datetime
-from smart_parenting.forms import AppointmentForm
-from smart_parenting.models import Doctor, Session
+from smart_parenting.forms import AppointmentForm, EmergencyForm
+from smart_parenting.models import (
+    AutismScreeningQuestion,
+    Doctor,
+    Response,
+    Session,
+    TeachingAid,
+)
 from django.db.models import Q
 from django.conf import settings
 
@@ -20,7 +28,12 @@ def appointment(request):
             appointment = appointmentForm.save(commit=False)
             appointment.user = request.user
             appointment.save()
-    return render(request, "smart_parenting/counseling.html", {"form": appointmentForm})
+        return render(
+            request, "smart_parenting/appointment.html", {"form": appointmentForm}
+        )
+    return render(
+        request, "smart_parenting/appointment.html", {"form": appointmentForm}
+    )
 
 
 def generate_timeslots(
@@ -100,7 +113,23 @@ def doctor(request):
 
 
 def emergency(request):
-    return render(request, "smart_parenting/EmergencyChild.html")
+    form = EmergencyForm()
+    if request.method == "POST":
+        emergencyForm = EmergencyForm(request.POST)
+        if emergencyForm.is_valid():
+            emergency = emergencyForm.save(commit=False)
+            emergency.user = request.user
+            emergency.save()
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                "Your emergency is successfully submitted. We will call you shortly!",
+            )
+        else:
+            return render(
+                request, "smart_parenting/EmergencyChild.html", {"form": emergencyForm}
+            )
+    return render(request, "smart_parenting/EmergencyChild.html", {"form": form})
 
 
 def achievements(request):
@@ -109,3 +138,160 @@ def achievements(request):
 
 def ambulance(request):
     return render(request, "smart_parenting/ambulance.html")
+
+
+def teaching_aids(request):
+    teaching_aids = TeachingAid.objects.all()
+    teaching_aid = TeachingAid.objects.first()
+    active_url = teaching_aid.pk
+    return render(
+        request,
+        "smart_parenting/teaching-aids.html",
+        {
+            "teaching_aids": teaching_aids,
+            "teaching_aid": teaching_aid,
+            "active_url": active_url,
+        },
+    )
+
+def convert_to_boolean(string):
+    return string.lower() == "true"
+
+def teaching_aid(request, aid_id):
+    teaching_aids = TeachingAid.objects.all()
+    teaching_aid = TeachingAid.objects.get(id=aid_id)
+    active_url = aid_id
+    return render(
+        request,
+        "smart_parenting/teaching-aids.html",
+        {
+            "teaching_aids": teaching_aids,
+            "teaching_aid": teaching_aid,
+            "active_url": active_url,
+        },
+    )
+
+
+def autism_screening_infants(request):
+    questions = AutismScreeningQuestion.objects.filter(age="INFANTS")
+
+    if request.method == "POST":
+        request_body = json.loads(request.body)
+        q_ids = []
+        q_answers = []
+        for resp in request_body:
+            q_id = resp["question_id"]
+            q_ans = resp["response"]
+            q_ids.append(q_id)
+            q_answers.append(q_ans)
+        try:
+            questions = AutismScreeningQuestion.objects.filter(pk__in=q_ids)
+        except IntegrityError:
+            return JsonResponse({"error": "Response already exists"}, status=400)
+            # responses = Response.objects.all().select_related("question")
+        score = 0
+        for qs, ans in zip(questions, q_answers):
+            if convert_to_boolean(ans)!= qs.expected_answer:
+                score += 1
+        print(score)
+        if score <= 3:
+            return JsonResponse({"risk": "LOW", "score": score})
+        elif 3 < score <= 5:
+            return JsonResponse({"risk": "MODERATE", "score": score})
+        else:
+            return JsonResponse({"risk": "HIGH", "score": score})
+        
+        
+    return render(request, "smart_parenting/questions.html", {"questions": questions})
+
+
+def autism_screening_toddlers(request):
+    questions = AutismScreeningQuestion.objects.filter(age='TODDLERS')
+
+    if request.method == "POST":
+        request_body = json.loads(request.body)
+        q_ids = []
+        q_answers = []
+        for resp in request_body:
+            q_id = resp["question_id"]
+            q_ans = resp["response"]
+            q_ids.append(q_id)
+            q_answers.append(q_ans)
+        try:
+            questions = AutismScreeningQuestion.objects.filter(pk__in=q_ids)
+        except IntegrityError:
+            return JsonResponse({"error": "Response already exists"}, status=400)
+            # responses = Response.objects.all().select_related("question")
+        score = 0
+        for qs, ans in zip(questions, q_answers):
+            if convert_to_boolean(ans)!= qs.expected_answer:
+                score += 1
+        if score <= 2:
+            return JsonResponse({"risk": "LOW", "score": score})
+        elif 2 < score <= 4:
+            return JsonResponse({"risk": "MODERATE", "score": score})
+        else:
+            return JsonResponse({"risk": "HIGH", "score": score})
+    return render(request, "smart_parenting/questions.html", {"questions": questions})
+
+
+def autism_screening_preschoolers(request):
+    questions = AutismScreeningQuestion.objects.filter(age='PRESCHOOLERS')
+
+    if request.method == "POST":
+        request_body = json.loads(request.body)
+        q_ids = []
+        q_answers = []
+        for resp in request_body:
+            q_id = resp["question_id"]
+            q_ans = resp["response"]
+            q_ids.append(q_id)
+            q_answers.append(q_ans)
+        try:
+            questions = AutismScreeningQuestion.objects.filter(pk__in=q_ids)
+        except IntegrityError:
+            return JsonResponse({"error": "Response already exists"}, status=400)
+            # responses = Response.objects.all().select_related("question")
+        score = 0
+        for qs, ans in zip(questions, q_answers):
+            if convert_to_boolean(ans)!= qs.expected_answer:
+                score += 1
+        print(score)
+        if score <= 3:
+            return JsonResponse({"risk": "LOW", "score": score})
+        elif 3 < score <= 5:
+            return JsonResponse({"risk": "MODERATE", "score": score})
+        else:
+            return JsonResponse({"risk": "HIGH", "score": score})
+    return render(request, "smart_parenting/questions.html", {"questions": questions})
+
+
+def autism_screening_childrens(request):
+    questions = AutismScreeningQuestion.objects.filter(age='CHILDREN')
+
+    if request.method == "POST":
+        request_body = json.loads(request.body)
+        q_ids = []
+        q_answers = []
+        for resp in request_body:
+            q_id = resp["question_id"]
+            q_ans = resp["response"]
+            q_ids.append(q_id)
+            q_answers.append(q_ans)
+        try:
+            questions = AutismScreeningQuestion.objects.filter(pk__in=q_ids)
+        except IntegrityError:
+            return JsonResponse({"error": "Response already exists"}, status=400)
+            # responses = Response.objects.all().select_related("question")
+        score = 0
+        for qs, ans in zip(questions, q_answers):
+            if convert_to_boolean(ans)!= qs.expected_answer:
+                score += 1
+        print(score)
+        if score <= 3:
+            return JsonResponse({"risk": "LOW", "score": score})
+        elif 3 < score <= 5:
+            return JsonResponse({"risk": "MODERATE", "score": score})
+        else:
+            return JsonResponse({"risk": "HIGH", "score": score})
+    return render(request, "smart_parenting/questions.html", {"questions": questions})

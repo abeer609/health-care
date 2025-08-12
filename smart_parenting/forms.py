@@ -1,6 +1,6 @@
 from django import forms
 from django.conf import settings
-from smart_parenting.models import Appointment, Doctor, Session
+from smart_parenting.models import Appointment, Doctor, Emergency, Session
 from unfold.widgets import UnfoldAdminTimeWidget
 
 
@@ -153,3 +153,10 @@ class AppointmentForm(TailwindForm):
         model = Appointment
         fields = ["patient_name", "doctor", "date", "time"]
         exclude = ["user", "status"]
+
+
+class EmergencyForm(TailwindForm):
+    live_location = forms.CharField(widget=forms.Textarea(attrs={'rows': 2, 'readonly':True}))
+    class Meta:
+        model = Emergency
+        fields = ["full_name", "phone_number", "address", "details","file", "live_location"]

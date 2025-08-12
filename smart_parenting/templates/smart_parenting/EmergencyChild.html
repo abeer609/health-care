@@ -1,135 +1,61 @@
-{% extends 'base.html' %}
-
-{% block extrahead %}
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f4f4f4;
-            /* text-align: center; */
-        }
-        .navbar {
-            background: #1565C0;
-            color: white;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        .navbar ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-        }
-        .navbar ul li {
-            margin: 0 15px;
-        }
-        .navbar ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease-in-out;
-        }
-        .navbar ul li a:hover {
-            color: #FFD700;
-        }
-        .container {
-            width: 60%;
-            margin: 40px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        h2 {
-            color: #1565C0;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button {
-            background: #1976D2;
-            color: white;
-            border: none;
-            padding: 12px;
-            cursor: pointer;
-            font-size: 18px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #0D47A1;
-        }
-        .location-btn {
-            background: #d32f2f;
-        }
-        .location-btn:hover {
-            background: #b71c1c;
-        }
-        .help-section {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-around;
-        }
-        .help-box {
-            background: #ff9800;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        .help-box:hover {
-            transform: scale(1.05);
-        }
-        .amblink{
-            text-decoration: none;
-            color: inherit;
-        }
-    </style>
-{% endblock %}
+{% extends 'smart_parenting/base.html' %}
 
 {% block content %}
-<div class="container">
-        <h2 class="text-2xl font-bold mb-4">Emergency Form</h2>
-        <form>
-            <input type="text" placeholder="Your Name" required>
-            <input type="text" placeholder="Your Address" required>
-            <input type="tel" placeholder="Your Phone Number" required>
-            <textarea rows="4" placeholder="Describe your emergency" required></textarea>
-            <input type="file" accept="image/*,video/*">
-            <button type="button" class="location-btn" onclick="getLocation()">Share Live Location</button>
-            <button type="submit">Submit</button>
+    <header>
+      <div class="mx-auto max-w-7xl">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+          Emergency
+        </h1>
+      </div>
+    </header>
+    <form class="space-y-4 md:space-y-6 mt-10" method="post">
+          {% csrf_token %} {% for field in form %}
+          <div>
+            <label
+              for="{{field.auto_id}}"
+              class="required block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+              >{{field.label}} {%if field.field.required%}<span class="text-red-500">*</span>{%endif%}</label
+            >
+            {{field}} 
+            {% for error in field.errors %}
+                <p class="mt-1 text-red-500">{{error}}</p>
+            {% endfor %}
+          </div>
+          {% endfor %}
+
+          <div class="flex gap-4">
+              <button
+                id="submit_form"
+                type="submit"
+                class="flex  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Book Now
+              </button>
+              <button
+                id="getLiveLocation"
+                class="flex  justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Get live location
+              </button>
+          </div>
         </form>
 
-        <div class="help-section">
-            <div class="help-box" onclick="callHelpline()">📞 Call Helpline</div>
-            <a href="ambulance.html" class="amblink"><div class="help-box">🚑 Nearby Ambulance Numbers</div></a>
-        </div>
-    </div>
-
     <script>
-        function getLocation() {
+        const live_location = document.getElementById('id_live_location')
+        const liveLocationBtn = document.getElementById("getLiveLocation")
+        function getLocation(e) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
-                    alert("Live Location Shared: \nLatitude: " + position.coords.latitude + 
-                          "\nLongitude: " + position.coords.longitude);
+                    live_location.value = JSON.stringify({"latitude": position.coords.latitude, "longitude": position.coords.longitude})
                 });
             } else {
                 alert("Geolocation is not supported by this browser.");
             }
+        }
+
+        liveLocationBtn.onclick = (e)=>{
+            e.preventDefault();
+            getLocation()
         }
 
         function callHelpline() {
